@@ -1,0 +1,72 @@
+---
+version: '3.2'
+
+services:
+  server:
+    image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
+    restart: unless-stopped
+    command: server
+    volumes:
+      - ~/data/authentik/media:/media
+      - ~/data/authentik/custom-templates:/templates
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:?database user required}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:?database name required}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:?database password required}
+    env_file:
+      - .env
+    networks:
+      - caddy
+      - authentik
+    labels:
+      caddy: ${AUTHENTIK_DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9000}}"
+  
+  worker:
+    image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
+    restart: unless-stopped
+    user: root
+    command: worker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/data/authentik/media:/media
+      - ~/data/authentik/certs:/certs
+      - ~/data/authentik/custom-templates:/templates
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:?database user required}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:?database name required}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:?database password required}
+    env_file:
+      - .env
+    networks:
+      - authentik
+
+  postgresql:
+    image: postgres:12-alpine
+    restart: unless-stopped
+    volumes:
+      - ~/data/authentik/database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASS:?database password required}
+      - POSTGRES_USER=${PG_USER:?database user required}
+      - POSTGRES_DB=${PG_DB:?database name required}
+    env_file:
+      - .env
+    networks:
+      - authentik
+  
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    networks:
+      - authentik
+
+networks:
+  caddy:
+    external: true
+  authentik:
+    name: authentik

@@ -1,0 +1,22 @@
+---
+version: "3.9"
+
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:0.4.0-nightly
+    container_name: prowlarr
+    env_file:
+      - .env
+    volumes:
+      - ~/appdata/prowlarr:/config
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9696}}"
+    networks:
+      - caddy
+    restart: unless-stopped
+
+networks:
+  caddy:
+    external: true
+

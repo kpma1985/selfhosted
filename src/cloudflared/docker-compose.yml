@@ -1,0 +1,20 @@
+version: '3.4'
+services:
+  cloudflared:
+    image: msnelling/cloudflared:2022.5.1
+    container_name: cloudflared
+    volumes:
+      - ./config:/etc/cloudflared
+    # interpolate environment vars into config template to make config and then run
+    command: [sh, -c, ( echo "cat <<EOF" ; cat /etc/cloudflared/config.yml.template ; echo EOF ) | sh > /etc/cloudflared/config.yml && /usr/local/bin/cloudflared tunnel --no-autoupdate run]
+    env_file:
+      - .env
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+     - cloudflared
+
+networks:
+  cloudflared:
+    external: true
