@@ -1,3 +1,4 @@
+---
 version: "3.9"
 
 services:
@@ -5,11 +6,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: caddy:v2.5.0
+    image: caddy:v2.5.1
     container_name: caddy
     labels:
       caddy.acme_dns: "cloudflare {env.CF_API_TOKEN}"
       caddy.email: "{env.EMAIL}"
+    volumes:
+      # for caddy-docker-proxy to work
+      - /var/run/docker.sock:/var/run/docker.sock
+      # for caddy itself
+      - ~/data/caddy/data:/data
+      - ~/data/caddy/config:/config
     environment:
       - CADDY_INGRESS_NETWORKS=caddy
     env_file:
@@ -17,12 +24,6 @@ services:
     networks:
       - caddy
       - cloudflared
-    volumes:
-      # for caddy-docker-proxy to work
-      - /var/run/docker.sock:/var/run/docker.sock
-      # for caddy itself
-      - ~/data/caddy/data:/data
-      - ~/data/caddy/config:/config
     restart: unless-stopped
 
 networks:

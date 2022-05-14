@@ -5,13 +5,13 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:0.4.0-nightly
     container_name: prowlarr
-    env_file:
-      - .env
-    volumes:
-      - ~/appdata/prowlarr:/config
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 9696}}"
+    volumes:
+      - ~/appdata/prowlarr:/config
+    env_file:
+      - .env
     networks:
       - caddy
     restart: unless-stopped

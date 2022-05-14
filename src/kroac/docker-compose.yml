@@ -8,12 +8,12 @@ services:
     labels:
       caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
+    volumes:
+      - ./site:/web
     env_file:
       - .env
     networks:
       - caddy
-    volumes:
-      - ./site:/web
     restart: unless-stopped
 
 networks:

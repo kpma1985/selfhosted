@@ -1,11 +1,14 @@
 ---
-version: '3.2'
+version: "3.9"
 
 services:
   server:
     image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
-    restart: unless-stopped
+    container_name: authentik
     command: server
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9000}}"
     volumes:
       - ~/data/authentik/media:/media
       - ~/data/authentik/custom-templates:/templates
@@ -20,13 +23,10 @@ services:
     networks:
       - caddy
       - authentik
-    labels:
-      caddy: ${AUTHENTIK_DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 9000}}"
-  
+    restart: unless-stopped
+
   worker:
     image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
-    restart: unless-stopped
     user: root
     command: worker
     volumes:
@@ -44,10 +44,10 @@ services:
       - .env
     networks:
       - authentik
+    restart: unless-stopped
 
   postgresql:
     image: postgres:12-alpine
-    restart: unless-stopped
     volumes:
       - ~/data/authentik/database:/var/lib/postgresql/data
     environment:
@@ -58,12 +58,13 @@ services:
       - .env
     networks:
       - authentik
+    restart: unless-stopped
   
   redis:
     image: redis:alpine
-    restart: unless-stopped
     networks:
       - authentik
+    restart: unless-stopped
 
 networks:
   caddy:
