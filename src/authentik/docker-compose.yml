@@ -12,6 +12,7 @@ services:
     volumes:
       - ~/data/authentik/media:/media
       - ~/data/authentik/custom-templates:/templates
+      - ./assets:/media/custom
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
