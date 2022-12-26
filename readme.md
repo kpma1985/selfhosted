@@ -79,6 +79,7 @@ Complete the suggested post-installation steps:
 ```bash
 sudo groupadd docker
 sudo usermod -aG docker $USER
+newgrp docker
 ```
 
 Test docker by running the hello-world container:
