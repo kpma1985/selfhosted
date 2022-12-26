@@ -1,0 +1,7 @@
+{
+        acme_dns cloudflare {env.CF_API_TOKEN}
+        email {env.EMAIL}
+}
+{env.DOMAIN} {
+        reverse_proxy static-file-server:8080
+}

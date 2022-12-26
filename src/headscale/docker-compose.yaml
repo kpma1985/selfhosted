@@ -1,0 +1,25 @@
+---
+version: "3.9"
+
+services:
+  headscale:
+    image: headscale/headscale:0.18.0-beta2
+    container_name: headscale
+    restart: unless-stopped
+    entrypoint: headscale serve
+    volumes:
+      - ./config:/etc/headscale
+      - ~/data/headscale/data:/var/lib/headscale
+    networks:
+      - caddy
+
+  headscale-ui:
+    image: ghcr.io/gurucomputing/headscale-ui:2022.12.23.2-beta
+    container_name: headscale-ui
+    restart: unless-stopped
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    external: true

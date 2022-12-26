@@ -1,0 +1,15 @@
+{
+        acme_dns cloudflare {env.CF_API_TOKEN}
+        email {env.EMAIL}
+}
+auth.{env.DOMAIN} {
+        reverse_proxy authentik:9000
+}
+hs.{env.DOMAIN} {
+        reverse_proxy /web* headscale-ui:443 {
+                transport http {
+                        tls_insecure_skip_verify
+                }
+        }
+        reverse_proxy headscale:8080
+}

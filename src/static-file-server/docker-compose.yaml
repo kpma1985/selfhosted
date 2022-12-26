@@ -2,16 +2,11 @@
 version: "3.9"
 
 services:
-  kroac:
+  static-file-server:
     image: halverneus/static-file-server:v1.8.6
-    container_name: kroac
-    labels:
-      caddy: ${DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 8080}}"
+    container_name: static-file-server
     volumes:
       - ./site:/web
-    env_file:
-      - .env
     networks:
       - caddy
     restart: unless-stopped

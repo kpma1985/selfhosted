@@ -6,9 +6,6 @@ services:
     image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
     container_name: authentik
     command: server
-    labels:
-      caddy: ${DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 9000}}"
     volumes:
       - ~/data/authentik/media:/media
       - ~/data/authentik/custom-templates:/templates

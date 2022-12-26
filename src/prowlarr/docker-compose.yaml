@@ -5,9 +5,6 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:0.4.0-nightly
     container_name: prowlarr
-    labels:
-      caddy: ${DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 9696}}"
     volumes:
       - ~/appdata/prowlarr:/config
     env_file:
@@ -19,4 +16,4 @@ services:
 networks:
   caddy:
     external: true
-
+    driver: overlay

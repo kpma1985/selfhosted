@@ -1,7 +1,7 @@
 ### Authentik setup
-1. Fill out missing values in `.env` - use the full domain for `AUTHENTIK_DOMAIN` and use `pwgen` with `sudo apt install pwgen` to simplify creating `PG_PASS` and `AUTHENTIK_SECRET_KEY`.
-1. Wait a minute or two for `caddy-docker-proxy` to see the Authentik container, issue a cert, and do whatever else it needs to do.
-1. Navigate to `https://${AUTHENTIK_DOMAIN}/if/flow/initial-setup` to create the admin account.
+1. Fill out missing values in `.env` - use `pwgen` with `sudo apt install pwgen` to simplify creating `PG_PASS` and `AUTHENTIK_SECRET_KEY`.
+1. Bring up the container with `docker-compose up -d` and wait 2-5 mins for everything to start. Verify that Authentik is running with `docker logs authentik`.
+1. Navigate to `https://auth.${DOMAIN}/if/flow/initial-setup` to create the admin account.
 
 ### Using Authentik
 - Go to `Directory/Users` in the Authentik sidebar to create users.
