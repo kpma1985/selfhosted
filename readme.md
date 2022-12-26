@@ -7,9 +7,10 @@ The first host, which must have a static IP, runs authentication and a VPN behin
         - run `docker network create caddy` before bringing the container up
     1. Authentik
         - after bringing up authentik, create a user for yourself and another for `servers`
+        - create a `headscalars` group and add any users that should be able to access the `headscale` server
         - create an OIDC provider, then create an application for `headscale` using that provider
     1. Headscale
-        - update the `config/config.yaml` file with the OIDC provider and application details, as well as the domain name and other details left blank
+        - update the `.env` file with the OIDC provider and application details, as well as the domain name and other details
 
 ### Swarm manager
 The second host, which also needs a static IP, manages a Docker swarm over a tailnet, and reverse proxies traffic to all subsequent hosts. To set up this host, follow the steps below.

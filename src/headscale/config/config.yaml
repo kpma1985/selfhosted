@@ -5,13 +5,6 @@
 # - `~/.headscale`
 # - current working directory
 
-# The url clients will connect to.
-# Typically this will be a domain like:
-#
-# https://myheadscale.example.com:443
-#
-// server_url: 
-
 # Address to listen to / bind to on the server
 #
 # For production:
@@ -244,12 +237,6 @@ dns_config:
   # Only works if there is at least a nameserver defined.
   magic_dns: true
 
-  # Defines the base domain to create the hostnames for MagicDNS.
-  # `base_domain` must be a FQDNs, without the trailing dot.
-  # The FQDN of the hosts will be
-  # `hostname.namespace.base_domain` (e.g., _myhost.mynamespace.example.com_).
-  // base_domain: 
-
 # Unix socket used for the CLI to connect without authentication
 # Note: for production you will want to set this to something like:
 unix_socket: /var/run/headscale.sock
@@ -263,9 +250,6 @@ unix_socket_permission: "0770"
 # OpenID Connect
 oidc:
   only_start_if_oidc_is_available: true
-  // issuer: 
-  // client_id: 
-  // client_secret: 
 #
 #   Customize the scopes used in the OIDC flow, defaults to "openid", "profile" and "email" and add custom query
 #   parameters to the Authorize Endpoint request. Scopes default to "openid", "profile" and "email".
@@ -281,7 +265,7 @@ oidc:
 #     - example.com
 # Groups you add to authentik for users, e.g. just make a headscalars group
   allowed_groups:
-    // - headscalars
+      - headscalars
 #   allowed_users:
 #     - alice@example.com
 #

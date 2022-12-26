@@ -7,6 +7,8 @@ services:
     container_name: headscale
     restart: unless-stopped
     entrypoint: headscale serve
+    env_file:
+      - .env
     volumes:
       - ./config:/etc/headscale
       - ~/data/headscale/data:/var/lib/headscale
