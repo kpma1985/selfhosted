@@ -1,0 +1,52 @@
+---
+version: "3.9"
+
+services:
+  sonarr:
+    # exposes port 8989
+    image: ghcr.io/hotio/sonarr:v4-4.0.0.316
+    container_name: sonarr
+    volumes:
+      - ~/appdata/sonarr:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    networks:
+      - caddy
+    restart: unless-stopped
+
+  radarr:
+    # exposes port 7878
+    image: ghcr.io/hotio/radarr:release-4.2.4.6635
+    container_name: radarr
+    volumes:
+      - ~/appdata/radarr:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    networks:
+      - caddy
+    restart: unless-stopped
+
+  prowlarr:
+    # exposes port 9696
+    image: ghcr.io/hotio/prowlarr:nightly-1.0.0.2171
+    container_name: prowlarr
+    volumes:
+      - ~/appdata/prowlarr:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    networks:
+      - caddy
+    restart: unless-stopped
+
+networks:
+  caddy:
+    external: true

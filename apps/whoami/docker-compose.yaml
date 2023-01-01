@@ -1,0 +1,19 @@
+---
+version: "3.9"
+
+services:
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    labels:
+      caddy: http://whoami.${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams http 80}}"
+    env_file:
+      - .env
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    external: true

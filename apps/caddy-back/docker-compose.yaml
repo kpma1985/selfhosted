@@ -1,0 +1,34 @@
+---
+version: "3.9"
+
+services:
+  caddy:
+    build:
+     context: .
+     dockerfile: Dockerfile
+    image: caddy:v2.6.2
+    container_name: caddy
+    restart: unless-stopped
+    labels:
+      caddy.acme_dns: "cloudflare {env.CF_API_TOKEN}"
+      caddy.email: "{env.EMAIL}"
+    environment:
+      - CADDY_INGRESS_NETWORKS=caddy
+    env_file:
+      - .env
+    volumes:
+      # for caddy-docker-proxy to work
+      - /var/run/docker.sock:/var/run/docker.sock
+      # for caddy itself
+      - /compose/data/caddy/data:/data
+      - /compose/data/caddy/config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    external: true
