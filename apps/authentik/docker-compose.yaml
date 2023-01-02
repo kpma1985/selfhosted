@@ -7,8 +7,8 @@ services:
     container_name: authentik
     command: server
     volumes:
-      - /compose/data/authentik/media:/media
-      - /compose/data/authentik/custom-templates:/templates
+      - ~/selfhosted/data/authentik/media:/media
+      - ~/selfhosted/data/authentik/custom-templates:/templates
       - ./assets:/media/custom
     environment:
       AUTHENTIK_REDIS__HOST: redis
@@ -29,9 +29,9 @@ services:
     command: worker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /compose/data/authentik/media:/media
-      - /compose/data/authentik/certs:/certs
-      - /compose/data/authentik/custom-templates:/templates
+      - ~/selfhosted/data/authentik/media:/media
+      - ~/selfhosted/data/authentik/certs:/certs
+      - ~/selfhosted/data/authentik/custom-templates:/templates
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
@@ -47,7 +47,7 @@ services:
   postgresql:
     image: postgres:12-alpine
     volumes:
-      - /compose/data/authentik/database:/var/lib/postgresql/data
+      - ~/selfhosted/data/authentik/database:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=${PG_PASS:?database password required}
       - POSTGRES_USER=${PG_USER:?database user required}
@@ -57,7 +57,7 @@ services:
     networks:
       - authentik
     restart: unless-stopped
-  
+
   redis:
     image: redis:alpine
     networks:

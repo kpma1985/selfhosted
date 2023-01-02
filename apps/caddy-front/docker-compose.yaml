@@ -4,17 +4,17 @@ version: "3.9"
 services:
   caddy:
     build:
-     context: .
-     dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile
     image: caddy:v2.6.2
     container_name: caddy
     restart: unless-stopped
     env_file:
       - .env
     volumes:
-      - $PWD/Caddyfile:/etc/caddy/Caddyfile
-      - ~/data/caddy/data:/data
-      - ~/data/caddy/config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ~/selfhosted/data/caddy/data:/data
+      - ~/selfhosted/data/caddy/config:/config
     ports:
       - "80:80"
       - "443:443"

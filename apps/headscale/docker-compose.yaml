@@ -11,7 +11,7 @@ services:
       - .env
     volumes:
       - ./config:/etc/headscale
-      - /compose/data/headscale/data:/var/lib/headscale
+      - ~/selfhosted/data/headscale/data:/var/lib/headscale
     networks:
       - caddy
 

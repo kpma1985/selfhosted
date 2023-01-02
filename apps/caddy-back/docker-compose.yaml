@@ -4,8 +4,8 @@ version: "3.9"
 services:
   caddy:
     build:
-     context: .
-     dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile
     image: caddy:v2.6.2
     container_name: caddy
     restart: unless-stopped
@@ -20,8 +20,8 @@ services:
       # for caddy-docker-proxy to work
       - /var/run/docker.sock:/var/run/docker.sock
       # for caddy itself
-      - /compose/data/caddy/data:/data
-      - /compose/data/caddy/config:/config
+      - ~/selfhosted/data/caddy/data:/data
+      - ~/selfhosted/data/caddy/config:/config
     ports:
       - "80:80"
       - "443:443"

@@ -7,7 +7,7 @@ services:
     image: ghcr.io/hotio/sonarr:v4-4.0.0.316
     container_name: sonarr
     volumes:
-      - ~/appdata/sonarr:/config
+      - ~/selfhosted/data/sonarr:/config
     environment:
       - PUID=1000
       - PGID=1000
@@ -22,7 +22,7 @@ services:
     image: ghcr.io/hotio/radarr:release-4.2.4.6635
     container_name: radarr
     volumes:
-      - ~/appdata/radarr:/config
+      - ~/selfhosted/data/radarr:/config
     environment:
       - PUID=1000
       - PGID=1000
@@ -37,7 +37,7 @@ services:
     image: ghcr.io/hotio/prowlarr:nightly-1.0.0.2171
     container_name: prowlarr
     volumes:
-      - ~/appdata/prowlarr:/config
+      - ~/selfhosted/data/prowlarr:/config
     environment:
       - PUID=1000
       - PGID=1000
