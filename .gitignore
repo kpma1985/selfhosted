@@ -1,4 +1,5 @@
 *.env
 assets/
 backups/
+data/
 src/static-file-server/site*
