@@ -2,4 +2,4 @@
 assets/
 backups/
 data/
-src/static-file-server/site*
+apps/static-file-server/site*
