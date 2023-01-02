@@ -5,8 +5,8 @@ services:
   headscale:
     image: headscale/headscale:0.18.0-beta2
     container_name: headscale
-    restart: unless-stopped
     entrypoint: headscale serve
+    restart: unless-stopped
     env_file:
       - .env
     volumes:

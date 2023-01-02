@@ -12,10 +12,10 @@ services:
     labels:
       caddy.acme_dns: "cloudflare {env.CF_API_TOKEN}"
       caddy.email: "{env.EMAIL}"
-    environment:
-      - CADDY_INGRESS_NETWORKS=caddy
     env_file:
       - .env
+    environment:
+      - CADDY_INGRESS_NETWORKS=caddy
     volumes:
       # for caddy-docker-proxy to work
       - /var/run/docker.sock:/var/run/docker.sock

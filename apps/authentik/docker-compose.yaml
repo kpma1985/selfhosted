@@ -5,64 +5,64 @@ services:
   server:
     image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
     container_name: authentik
+    restart: unless-stopped
     command: server
-    volumes:
-      - ~/selfhosted/data/authentik/media:/media
-      - ~/selfhosted/data/authentik/custom-templates:/templates
-      - ./assets:/media/custom
+    env_file:
+      - .env
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:?database user required}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:?database name required}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:?database password required}
-    env_file:
-      - .env
+    volumes:
+      - ~/selfhosted/data/authentik/media:/media
+      - ~/selfhosted/data/authentik/custom-templates:/templates
+      - ./assets:/media/custom
     networks:
       - caddy
       - authentik
-    restart: unless-stopped
 
   worker:
     image: ${AUTHENTIK_IMAGE}:${AUTHENTIK_TAG}
     user: root
+    restart: unless-stopped
     command: worker
+    env_file:
+      - .env
+    environment:
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:?database user required}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:?database name required}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:?database password required}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/selfhosted/data/authentik/media:/media
       - ~/selfhosted/data/authentik/certs:/certs
       - ~/selfhosted/data/authentik/custom-templates:/templates
-    environment:
-      AUTHENTIK_REDIS__HOST: redis
-      AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:?database user required}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:?database name required}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS:?database password required}
-    env_file:
-      - .env
     networks:
       - authentik
-    restart: unless-stopped
 
   postgresql:
     image: postgres:12-alpine
-    volumes:
-      - ~/selfhosted/data/authentik/database:/var/lib/postgresql/data
+    restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - POSTGRES_PASSWORD=${PG_PASS:?database password required}
       - POSTGRES_USER=${PG_USER:?database user required}
       - POSTGRES_DB=${PG_DB:?database name required}
-    env_file:
-      - .env
+    volumes:
+      - ~/selfhosted/data/authentik/database:/var/lib/postgresql/data
     networks:
       - authentik
-    restart: unless-stopped
 
   redis:
     image: redis:alpine
+    restart: unless-stopped
     networks:
       - authentik
-    restart: unless-stopped
 
 networks:
   caddy:

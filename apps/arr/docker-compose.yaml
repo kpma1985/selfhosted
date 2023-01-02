@@ -6,46 +6,46 @@ services:
     # exposes port 8989
     image: ghcr.io/hotio/sonarr:v4-4.0.0.316
     container_name: sonarr
-    volumes:
-      - ~/selfhosted/data/sonarr:/config
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
       - UMASK=002
       - TZ=America/Chicago
+    volumes:
+      - ~/selfhosted/data/sonarr:/config
     networks:
       - caddy
-    restart: unless-stopped
 
   radarr:
     # exposes port 7878
     image: ghcr.io/hotio/radarr:release-4.2.4.6635
     container_name: radarr
-    volumes:
-      - ~/selfhosted/data/radarr:/config
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
       - UMASK=002
       - TZ=America/Chicago
+    volumes:
+      - ~/selfhosted/data/radarr:/config
     networks:
       - caddy
-    restart: unless-stopped
 
   prowlarr:
     # exposes port 9696
     image: ghcr.io/hotio/prowlarr:nightly-1.0.0.2171
     container_name: prowlarr
-    volumes:
-      - ~/selfhosted/data/prowlarr:/config
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
       - UMASK=002
       - TZ=America/Chicago
+    volumes:
+      - ~/selfhosted/data/prowlarr:/config
     networks:
       - caddy
-    restart: unless-stopped
 
 networks:
   caddy:

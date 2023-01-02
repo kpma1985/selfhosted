@@ -5,11 +5,11 @@ services:
   static-file-server:
     image: halverneus/static-file-server:v1.8.6
     container_name: static-file-server
+    restart: unless-stopped
     volumes:
       - ./site:/web
     networks:
       - caddy
-    restart: unless-stopped
 
 networks:
   caddy:

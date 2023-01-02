@@ -2,6 +2,7 @@ services:
   kopia:
     image: kopia/kopia:latest
     container_name: kopia
+    hostname: ${HOSTNAME}
     user: "0:0"
     restart: "unless-stopped"
     privileged: true
@@ -18,17 +19,16 @@ services:
       - --address=0.0.0.0:51515
       - --server-username=${SERVER_USERNAME}
       - --server-password=${SERVER_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - /mnt/kopia:/tmp:shared
       - ~/selfhosted/data/kopia/config:/app/config
       - ~/selfhosted/data/kopia/cache:/app/cache
       - ~/selfhosted/data/kopia/logs:/app/logs
       - ~/selfhosted:/data:ro
-    env_file:
-      - .env
     networks:
       - caddy
-    hostname: ${HOSTNAME}
 
 networks:
   caddy:
