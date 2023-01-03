@@ -1,3 +1,6 @@
+---
+version: "3.9"
+
 services:
   kopia:
     image: kopia/kopia:latest
@@ -15,6 +18,7 @@ services:
     command:
       - server
       - start
+      - --insecure
       - --disable-csrf-token-checks
       - --address=0.0.0.0:51515
       - --server-username=${SERVER_USERNAME}

@@ -1,0 +1,11 @@
+version: 2
+
+locations:
+  selfhosted:
+    from: /data
+    to: backblaze
+    cron: '45 4 * * *' # everyday at 4:45am
+
+backends:
+  backblaze:
+    type: b2

@@ -1,0 +1,11 @@
+---
+version: "3.9"
+
+services:
+  image: cupcakearmy/autorestic:1.7.4
+  container_name: autorestic
+  restart: unless-stopped
+  command: "autorestic backup -va -c /config/.autorestic.yaml"
+  volumes:
+    - ./config:/config
+    - ~/selfhosted:/data
