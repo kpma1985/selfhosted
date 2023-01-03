@@ -3,3 +3,4 @@ assets/
 backups/
 data/
 apps/static-file-server/site*
+Caddyfile
