@@ -1,0 +1,1 @@
+Doesn't work easily. Goal is to make a Docker image that periodically (based on timing in config) backs up the mounted local folder using restic. The `autorestic` image requires an external cron job, etc. and is a one-off run rather than a daemon that stays on. Would like to eventually come back to this and make the daemon-based image.
