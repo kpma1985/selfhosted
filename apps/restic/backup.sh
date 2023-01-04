@@ -6,8 +6,8 @@ source .env
 set +o allexport
 
 # backup from local directory to repository as specified in .env
-sudo restic -r b2:${B2_BUCKET_NAME} --verbose backup ${LOCAL_DIR}
-local restic_status = $?
+sudo restic -r b2:${B2_BUCKET_NAME} --verbose backup ${BACKUP_DIR}
+restic_status=$?
 
 # describe how the backup went
 # TODO: replace with healthcheck/ntfy

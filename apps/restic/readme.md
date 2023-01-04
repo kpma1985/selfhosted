@@ -2,6 +2,13 @@
 
 There's no great Docker-based solution for restic, so these shell scripts are a good option. 
 
+## Setup
+### Install restic
+```bash
+sudo apt-get update
+sudo apt-get install restic
+```
+
 ## Automating
 Install `crontab` to automate the running of `backup.sh` and `remove-old.sh`.
 ```
