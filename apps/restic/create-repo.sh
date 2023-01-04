@@ -6,4 +6,4 @@ source .env
 set +o allexport
 
 # create a new repository
-sudo -E restic -r b2:${B2_BUCKET_NAME} init
+restic -r b2:${B2_BUCKET_NAME} init

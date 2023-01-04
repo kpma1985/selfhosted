@@ -23,7 +23,7 @@ sudo apt-get update
 sudo apt-get install cron
 ```
     
-Then, edit the crontab file:
+Then, edit the `sudo` crontab file:
 ```
 crontab -e
 ```

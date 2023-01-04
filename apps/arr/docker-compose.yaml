@@ -3,7 +3,6 @@ version: "3.9"
 
 services:
   sonarr:
-    # exposes port 8989
     image: ghcr.io/hotio/sonarr:v4-4.0.0.316
     container_name: sonarr
     restart: unless-stopped
@@ -15,10 +14,9 @@ services:
     volumes:
       - ~/selfhosted/data/sonarr:/config
     networks:
-      - caddy
+      - caddy # upstreams 8989
 
   radarr:
-    # exposes port 7878
     image: ghcr.io/hotio/radarr:release-4.2.4.6635
     container_name: radarr
     restart: unless-stopped
@@ -30,10 +28,9 @@ services:
     volumes:
       - ~/selfhosted/data/radarr:/config
     networks:
-      - caddy
+      - caddy # upstreams 7878
 
   prowlarr:
-    # exposes port 9696
     image: ghcr.io/hotio/prowlarr:nightly-1.0.0.2171
     container_name: prowlarr
     restart: unless-stopped
@@ -45,7 +42,7 @@ services:
     volumes:
       - ~/selfhosted/data/prowlarr:/config
     networks:
-      - caddy
+      - caddy # upstreams 9696
 
 networks:
   caddy:

@@ -6,7 +6,7 @@ source .env
 set +o allexport
 
 # backup from local directory to repository as specified in .env
-sudo -E restic -r b2:${B2_BUCKET_NAME} --verbose backup ${BACKUP_DIR}
+restic -r b2:${B2_BUCKET_NAME} --verbose backup ${BACKUP_DIR}
 restic_status=$?
 
 # describe how the backup went
