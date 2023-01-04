@@ -9,7 +9,7 @@ services:
     volumes:
       - ./site:/web
     networks:
-      - caddy
+      - caddy # upstreams 8080
 
 networks:
   caddy:

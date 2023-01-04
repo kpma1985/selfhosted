@@ -1,12 +1,9 @@
-# Todo
-- get rid of middle VPS, install tailscale on the first VPS, move static-file-server there as well
-- retry *arr with new worker node plan
-
 # Hosts
 ### Auth + VPN + Reverse proxy
 The first host, which must have a static IP, runs authentication and a VPN behind a reverse proxy, along with routing traffic to other notes. Currently, Authentik is used for authentication, Headscale is used for the VPN, and Caddy is used to reverse proxy. To set up this host, follow the steps below.
 1. Initial setup
-1. Run containers (order matters)
+1. Restic setup (w/ cronjobs for `backup.sh` and `remove-old.sh`)
+1. Run containers (Caddy and Authentik must be the first and second, respectively)
     1. Caddy (use caddy-front here)
         - run `docker network create caddy` before bringing the container up
     1. Authentik
@@ -15,11 +12,14 @@ The first host, which must have a static IP, runs authentication and a VPN behin
         - create an OIDC provider, then create an application for `headscale` using that provider
     1. Headscale
         - update the `.env` file with the OIDC provider and application details, as well as the domain name and other details
+    1. Static-file-server
+    1. Uptime Kuma
 1. Tailscale setup
 
 ### Worker nodes
 Subsequently, as many nodes as desired can be added, with or without static IPs. To set up a worker node, follow the steps below.
 1. Initial setup
+1. Restic setup (w/ cronjobs for `backup.sh` *only*)
 1. Tailscale setup
 1. Run containers
     1. Caddy (use caddy-back here)
@@ -69,6 +69,12 @@ sudo chmod 600 /home/$NAME/.ssh/authorized_keys
 Finally, SSH in with the new username and delete the automatically created user:
 ```bash
 sudo deluser --remove-home <automatically created user>
+```
+
+Set the timezone as appropriate:
+```bash
+sudo timedatectl set-timezone America/Chicago
+timedatectl
 ```
 
 Next, install Docker by following the [official instructions](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository).

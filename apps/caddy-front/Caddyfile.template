@@ -16,3 +16,6 @@ hs.{$DOMAIN} {
         }
         reverse_proxy headscale:8080
 }
+status.{$DOMAIN} {
+        reverse_proxy uptime-kuma:3001
+}

@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     networks:
-      - caddy
+      - caddy # upstreams 80
 
 networks:
   caddy:

@@ -13,7 +13,7 @@ services:
       - ./config:/etc/headscale
       - ~/selfhosted/data/headscale/data:/var/lib/headscale
     networks:
-      - caddy
+      - caddy # upstreams 8080
 
   headscale-ui:
     image: ghcr.io/gurucomputing/headscale-ui:2022.12.23.2-beta

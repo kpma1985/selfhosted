@@ -1,0 +1,20 @@
+---
+version: "3.9"
+
+services:
+  healthchecks:
+    image: lscr.io/linuxserver/healthchecks:latest
+    container_name: healthchecks
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - INTEGRATIONS_ALLOW_PRIVATE_IPS=True
+    volumes:
+      - ~/selfhosted/data/healthchecks:/config
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    external: true
