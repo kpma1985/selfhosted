@@ -13,14 +13,14 @@ restic_status=$?
 # TODO: replace with healthcheck/ntfy
 if [ $restic_status -eq 0 ]; then
     echo "success"
-    curl https://${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=up&msg=success&ping=
+    curl ${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=up&msg=success&ping=
 elif [ $restic_status -eq 1 ]; then
     echo "failure"
-    curl https://${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=down&msg=failure&ping=
+    curl ${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=down&msg=failure&ping=
 elif [ $restic_status -eq 3 ]; then
     echo "incomplete"
-    curl https://${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=down&msg=incomplete&ping=
+    curl ${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=down&msg=incomplete&ping=
 else
     echo "unknown"
-    curl https://${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=down&msg=unknown&ping=
+    curl ${UPTIME_KUMA_URL}/api/push/${UPTIME_KUMA_CODE}?status=down&msg=unknown&ping=
 fi
