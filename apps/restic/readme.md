@@ -25,17 +25,23 @@ sudo apt-get install cron
     
 Then, edit the `sudo` crontab file:
 ```
-crontab -e
+sudo crontab -e
 ```
 
 Use [crontab.guru](https://crontab.guru/) to generate the cron schedule. For example, to run the backup at 4:45 AM every day, use:
 ```
-45 4 * * * ~/selfhosted/apps/restic/backup.sh
+45 4 * * * cd /home/avirut/selfhosted/apps/restic && ./backup.sh > /home/avirut/selfhosted/data/restic/backup.log 2>&1
+0 17 * * * cd /home/avirut/selfhosted/apps/restic && ./remove-old.sh > /home/avirut/selfhosted/data/restic/remove-old.log 2>&1
 ```
 
 On a single host only (likely the VPS), run the `remove-old.sh` script at a time when no other backups are running. For example, to run the script at 4:00 PM every day, use:
 ```bash
 0 16 * * * ~/selfhosted/apps/restic/remove-old.sh
+```
+
+In order to get logs, make a restic folder in the datadir:
+```bash
+sudo mkdir ~/selfhosted/data/restic
 ```
 
 ## Shell scripts
