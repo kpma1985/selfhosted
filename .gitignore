@@ -3,4 +3,5 @@ assets/
 backups/
 data/
 apps/static-file-server/site*
+apps/authentik/assets*
 Caddyfile
