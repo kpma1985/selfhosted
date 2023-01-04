@@ -11,6 +11,11 @@ restic version
 ```
 Can also just use `install.sh`.
 
+### Make files executable
+```bash
+chmod +x *.sh
+```
+
 ## Automating
 Install `crontab` to automate the running of `backup.sh` and `remove-old.sh`.
 ```
