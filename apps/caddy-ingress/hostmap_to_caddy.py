@@ -20,9 +20,6 @@ hostmap = {}
 with open(hm_path) as f:
     hostmap = json.load(f)
 
-print(env)
-print(hostmap)
-
 routes = []
 for host, subdomains in hostmap.items():
     # replace all environment variable interpolations in subdomains with their values from env
