@@ -1,0 +1,92 @@
+{
+    // "logging": {
+    //     "logs": {
+    //         "default": {
+    //             "level": "DEBUG"
+    //         }
+    //     }
+    // },
+    "apps": {
+        "layer4": {
+            "servers": {
+                "ingress_rp": {
+                    "listen": [
+                        ":443"
+                    ],
+                    "routes": [
+                        // proxy to caddy-docker-proxy for 100.64.0.1
+                        {
+                            "match": [
+                                {
+                                    "tls": {
+                                        "sni": [
+                                            "url1",
+                                            "url2",
+                                            "url3"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "http": [
+                                        {
+                                            "host": [
+                                                "url1",
+                                                "url2",
+                                                "url3"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "handle": [
+                                {
+                                    "handler": "proxy",
+                                    "upstreams": [
+                                        {
+                                            "dial": [
+                                                "100.64.0.1:4567"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        // proxy to caddy-docker-proxy for 100.64.0.3
+                        {
+                            "match": [
+                                {
+                                    "tls": {
+                                        "sni": [
+                                            "whoami.{env.DOMAIN}"
+                                        ]
+                                    }
+                                },
+                                {
+                                    "http": [
+                                        {
+                                            "host": [
+                                                "whoami.{env.DOMAIN}"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "handle": [
+                                {
+                                    "handler": "proxy",
+                                    "upstreams": [
+                                        {
+                                            "dial": [
+                                                "100.64.0.3:4567"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

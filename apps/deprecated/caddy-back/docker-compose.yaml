@@ -10,8 +10,14 @@ services:
     container_name: caddy
     restart: unless-stopped
     labels:
-      caddy.acme_dns: "cloudflare {env.CF_API_TOKEN}"
-      caddy.email: "{env.EMAIL}"
+      caddy_0.acme_dns: "cloudflare {env.CF_API_TOKEN}"
+      caddy_0.email: "{env.EMAIL}"
+
+      caddy_1: (fa_authentik)
+      caddy_1.forward_auth: https://auth.${DOMAIN}
+      caddy_1.forward_auth.uri: /outpost.goauthentik.io/auth/caddy
+      caddy_1.forward_auth.copy_headers: X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+      caddy_1.forward_auth.header_up: Host {upstream_hostport}
     env_file:
       - .env
     environment:

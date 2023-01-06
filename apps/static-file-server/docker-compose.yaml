@@ -6,6 +6,9 @@ services:
     image: halverneus/static-file-server:v1.8.6
     container_name: static-file-server
     restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
     volumes:
       - ./site:/web
     networks:

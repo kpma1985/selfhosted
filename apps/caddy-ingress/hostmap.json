@@ -1,0 +1,11 @@
+{
+  "100.64.0.1": [
+    "${DOMAIN}",
+    "hs.${DOMAIN}",
+    "auth.${DOMAIN}",
+    "status.${DOMAIN}"
+  ],
+  "100.64.0.3": [
+    "whoami.${DOMAIN}"
+  ]
+}

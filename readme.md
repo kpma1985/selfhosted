@@ -104,6 +104,9 @@ For Docker swarm to work, certain ports must be open on all hosts. First, ensure
 - 7946/tcp
 - 7946/udp
 - 4789/udp
+- 2376/tcp
+
+Both above and below, we can open hosts only to the tailnet IP range, i.e., `100.64.0.0/10`.  
 
 Then, on all swarm hosts, use `firewalld` to edit `iptables`:
 ```bash
@@ -114,7 +117,24 @@ sudo firewall-cmd --permanent --zone=public --add-port=2377/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=7946/tcp
 sudo firewall-cmd --permanent --zone=public --add-port=7946/udp
 sudo firewall-cmd --permanent --zone=public --add-port=4789/udp
+sudo firewall-cmd --permanent --zone=public --add-port=2376/udp
 sudo firewall-cmd --reload
+```
+
+Next, initialize the swarm:
+```bash
+docker swarm init --advertise-addr <tailnet IP>
+```
+
+Finally, add the other hosts to the swarm:
+```bash
+docker swarm join-token worker # get the token from the swarm manager
+```
+Run the command printed above on other hosts, adding in `--advertise-addr <tailnet IP>`.
+
+Create a Docker overlay network for the swarm:
+```bash
+docker network create --driver overlay --attachable --subnet
 ```
 
 # Debugging

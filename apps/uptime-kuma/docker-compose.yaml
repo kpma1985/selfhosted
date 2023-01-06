@@ -6,6 +6,9 @@ services:
     image: louislam/uptime-kuma:1.19.3-alpine
     container_name: uptime-kuma
     restart: unless-stopped
+    labels:
+      caddy: status.${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3001}}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/selfhosted/data/uptime-kuma:/app/data

@@ -7,6 +7,9 @@ services:
     container_name: headscale
     entrypoint: headscale serve
     restart: unless-stopped
+    labels:
+      caddy: hs.${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
     env_file:
       - .env
     volumes:
