@@ -7,7 +7,7 @@ services:
     container_name: whoami
     restart: unless-stopped
     labels:
-      caddy: whoami.${DOMAIN}
+      caddy: ${DOMAIN}
       caddy.reverse_proxy: "{{upstreams 80}}"
     env_file:
       - .env

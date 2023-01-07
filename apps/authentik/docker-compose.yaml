@@ -7,6 +7,8 @@ services:
     container_name: authentik
     restart: unless-stopped
     command: server
+    labels:
+      - caddy=${DOMAIN}
     env_file:
       - .env
     environment:
@@ -19,6 +21,8 @@ services:
       - ~/selfhosted/data/authentik/media:/media
       - ~/selfhosted/data/authentik/custom-templates:/templates
       - ./assets:/media/custom
+    ports:
+      - 9000:9000
     networks:
       - cdp # upstreams 9000
       - authentik
