@@ -20,7 +20,7 @@ services:
       - ~/selfhosted/data/authentik/custom-templates:/templates
       - ./assets:/media/custom
     networks:
-      - caddy # upstreams 9000
+      - cdp # upstreams 9000
       - authentik
 
   worker:
@@ -65,7 +65,7 @@ services:
       - authentik
 
 networks:
-  caddy:
+  cdp:
     external: true
   authentik:
     name: authentik

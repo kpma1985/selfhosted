@@ -4,8 +4,12 @@ The first host, which must have a static IP, runs authentication and a VPN behin
 1. Initial setup
 1. Restic setup (w/ cronjobs for `backup.sh` and `remove-old.sh`)
 1. Run containers (Caddy and Authentik must be the first and second, respectively)
-    1. Caddy (use caddy-front here)
-        - run `docker network create caddy` before bringing the container up
+    1. Caddy-ingress
+        1. Edit `hostmap.json` to include the domain name and any subdomains that will be used
+        1. Generate a `caddy-ingress.json` file using `reload-caddy-json.sh`
+        1. Bring up the ingress container
+    1. Caddy-docker-proxy
+        - run `docker network create cdp` before bringing the container up
     1. Authentik
         - after bringing up authentik, create a user for yourself and another for `servers`
         - create a `headscalars` group and add any users that should be able to access the `headscale` server
@@ -20,33 +24,11 @@ The first host, which must have a static IP, runs authentication and a VPN behin
 Subsequently, as many nodes as desired can be added, with or without static IPs. To set up a worker node, follow the steps below.
 1. Initial setup
 1. Restic setup (w/ cronjobs for `backup.sh` *only*)
-1. Tailscale setup
+1. Tailscale setup + join the network
 1. Run containers
-    1. Caddy (use caddy-back here)
-        - run `docker network create caddy` before bringing the container up
-    1. Currently, any subsequent containers spun up on a worker node will be automatically reverse proxied to by that node's instance of Caddy. However, for the traffic to reach the worker node in the first place, the relevant subdomain must be directed to that particular node in the Caddyfile of the first host (VPS w/ static IP that's gating all traffic). Another downside is that TLS terminates at the VPS, and further traffic, which occurs over the headscale network, is not encrypted. A couple solutions to this are:
-        -  described [here](https://caddy.community/t/caddy-reverse-proxy-nextcloud-collabora-vaultwarden-with-local-https/12052), have the former Caddy serve as a CA and create a certificate for each worker node, then have each worker node serve as a reverse proxy for its own containers, essentially serving as a second TLS
-        - use Caddy-l4 to proxy TCP traffic directly to the worker node, bypassing the first host entirely. This is likely optimal, and should be much easier once l4 is further developed and allows access via Caddyfile. Nevertheless, since this whole thing needs to be automated anyways, it may be worth it to just see if I can do it now. 
-    1. Since TLS terminated at the VPS node, everything beyond needs to be explicitly specified as http. 
-        - This means that on the worker node, caddy labels should be specified as:
-        ```
-        http://<subdomain>.<domain> {
-            reverse_proxy http://<container>:<port>
-        }
-        ```
-        which translates to container labels of
-        ```
-        labels:
-          caddy: http://sub.${DOMAIN}
-          caddy.reverse_proxy: "{{upstreams http 80}}"
-        ```
-        - And on the VPS node, this would be added as:
-        ```
-        sub.{$DOMAIN} {
-            reverse_proxy http://<worker node tailnet IP>
-        }
-        directly to the Caddyfile
-    1. TODO: automate the hard part of this process
+    1. Caddy (use caddy-docker-proxy here)
+        - run `docker network create cdp` before bringing the container up
+    1. Any subdomains that will be used must be added to the `hostmap.json` file on the auth host, and the `caddy-ingress.json` file must be regenerated and loaded using `reload-caddy-json.sh`
 
 # Steps
 ### Initial setup

@@ -12,8 +12,8 @@ services:
     volumes:
       - ./site:/web
     networks:
-      - caddy # upstreams 8080
+      - cdp # upstreams 8080
 
 networks:
-  caddy:
+  cdp:
     external: true

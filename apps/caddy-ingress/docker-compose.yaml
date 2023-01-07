@@ -15,8 +15,9 @@ services:
       - ./caddy-ingress.json:/etc/caddy/caddy-ingress.json
       - ~/selfhosted/data/caddy-ingress/data:/data
       - ~/selfhosted/data/caddy-ingress/config:/config
-    network_mode: "host"
-    # ports:
-    #   - "80:80"
-    #   - "443:443"
-    #   - "443:443/udp"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

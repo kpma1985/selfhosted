@@ -13,8 +13,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/selfhosted/data/uptime-kuma:/app/data
     networks:
-      - caddy # upstreams 3001
+      - cdp # upstreams 3001
 
 networks:
-  caddy:
+  cdp:
     external: true
