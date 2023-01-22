@@ -6,6 +6,9 @@ services:
     image: ghcr.io/hotio/sonarr:v4-4.0.0.316
     container_name: sonarr
     restart: unless-stopped
+    labels:
+      caddy: sonarr.${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8989}}"
     environment:
       - PUID=1000
       - PGID=1000
@@ -14,12 +17,15 @@ services:
     volumes:
       - ~/selfhosted/data/sonarr:/config
     networks:
-      - caddy # upstreams 8989
+      - cdp # upstreams 8989
 
   radarr:
     image: ghcr.io/hotio/radarr:release-4.2.4.6635
     container_name: radarr
     restart: unless-stopped
+    labels:
+      caddy: radarr.${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 7878}}"
     environment:
       - PUID=1000
       - PGID=1000
@@ -28,12 +34,15 @@ services:
     volumes:
       - ~/selfhosted/data/radarr:/config
     networks:
-      - caddy # upstreams 7878
+      - cdp # upstreams 7878
 
   prowlarr:
     image: ghcr.io/hotio/prowlarr:nightly-1.0.0.2171
     container_name: prowlarr
     restart: unless-stopped
+    labels:
+      caddy: prowlarr.${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 9696}}"
     environment:
       - PUID=1000
       - PGID=1000
@@ -42,8 +51,8 @@ services:
     volumes:
       - ~/selfhosted/data/prowlarr:/config
     networks:
-      - caddy # upstreams 9696
+      - cdp # upstreams 9696
 
 networks:
-  caddy:
+  cdp:
     external: true
