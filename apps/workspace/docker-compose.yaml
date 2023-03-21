@@ -1,0 +1,26 @@
+---
+version: "3.9"
+
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: workspace:v0.1.0
+    container_name: workspace
+    restart: unless-stopped
+    labels:
+      caddy_0: ${DOMAIN_JUPYTER}
+      caddy_0.reverse_proxy: "{{upstreams 8888}}"
+      caddy_1: ${DOMAIN_CODE}
+      caddy_1.reverse_proxy: "{{upstreams 8080}}"
+      caddy_2: ${DOMAIN_RSTUDIO}
+      caddy_2.reverse_proxy: "{{upstreams 8787}}"
+    # volumes:
+      # - ./envs:/root/envsnano 
+    networks:
+      - cdp
+
+networks:
+  cdp:
+    external: true

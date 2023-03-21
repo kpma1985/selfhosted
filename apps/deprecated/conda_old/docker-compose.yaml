@@ -1,0 +1,11 @@
+---
+version: "3"
+
+services:
+  conda:
+    image: condaforge/mambaforge:22.9.0-3
+    container_name: conda
+    volumes:
+      - /opt/conda:/opt/conda
+    # entrypoint: /bin/bash -c "conda init bash"
+    command: tail -f /dev/null

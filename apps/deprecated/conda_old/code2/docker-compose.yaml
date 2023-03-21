@@ -1,0 +1,54 @@
+---
+version: "3.9"
+
+services:
+  coder:
+    image: ghcr.io/coder/coder:v0.15.2
+    container_name: coder
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 7080}}"
+    env_file:
+      - .env
+    environment:
+      CODER_PG_CONNECTION_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database/${POSTGRES_DB}?sslmode=disable"
+      CODER_ADDRESS: "0.0.0.0:7080"
+      CODER_ACCESS_URL: "https://${DOMAIN}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - cdp
+      - coder
+
+  database:
+    image: "postgres:14.2"
+    container_name: coder_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} # The PostgreSQL user (useful to connect to the database)
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: ${POSTGRES_DB} # The PostgreSQL default database (automatically created at first launch)
+    volumes:
+      - ~/selfhosted/data/coder:/var/lib/postgresql/data # Use "docker volume rm coder_coder_data" to reset Coder
+    networks:
+      - coder
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  cdp:
+    external: true
+  coder:
+    name: coder

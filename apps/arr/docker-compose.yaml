@@ -2,42 +2,8 @@
 version: "3.9"
 
 services:
-  sonarr:
-    image: ghcr.io/hotio/sonarr:v4-4.0.0.316
-    container_name: sonarr
-    restart: unless-stopped
-    labels:
-      caddy: ${DOMAIN_SONARR}
-      caddy.reverse_proxy: "{{upstreams 8989}}"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK=002
-      - TZ=America/Chicago
-    volumes:
-      - ~/selfhosted/data/sonarr:/config
-    networks:
-      - cdp # upstreams 8989
-
-  radarr:
-    image: ghcr.io/hotio/radarr:release-4.2.4.6635
-    container_name: radarr
-    restart: unless-stopped
-    labels:
-      caddy: ${DOMAIN_RADARR}
-      caddy.reverse_proxy: "{{upstreams 7878}}"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK=002
-      - TZ=America/Chicago
-    volumes:
-      - ~/selfhosted/data/radarr:/config
-    networks:
-      - cdp # upstreams 7878
-
   prowlarr:
-    image: ghcr.io/hotio/prowlarr:nightly-1.0.0.2171
+    image: ghcr.io/hotio/prowlarr:release-1.2.2.2699
     container_name: prowlarr
     restart: unless-stopped
     labels:
@@ -49,10 +15,93 @@ services:
       - UMASK=002
       - TZ=America/Chicago
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ~/selfhosted/data/prowlarr:/config
     networks:
       - cdp # upstreams 9696
+      - arr
+
+  sonarr:
+    image: ghcr.io/hotio/sonarr:v4-4.0.0.401
+    container_name: sonarr
+    restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN_SONARR}
+      caddy.reverse_proxy: "{{upstreams 8989}}"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ~/selfhosted/data/sonarr:/config
+      - /mnt/data:/mnt/data
+    networks:
+      - cdp # upstreams 8989
+      - arr
+
+  radarr:
+    image: ghcr.io/hotio/radarr:release-4.3.2.6857
+    container_name: radarr
+    restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN_RADARR}
+      caddy.reverse_proxy: "{{upstreams 7878}}"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ~/selfhosted/data/radarr:/config
+      - /mnt/data:/mnt/data
+    networks:
+      - cdp # upstreams 7878
+      - arr
+
+  bazarr:
+    image: ghcr.io/hotio/bazarr:release-1.2.0
+    container_name: bazarr
+    restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN_BAZARR}
+      caddy.reverse_proxy: "{{upstreams 6767}}"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ~/selfhosted/data/bazarr:/config
+      - /mnt/data/media:/mnt/data/media
+    networks:
+      - cdp # upstreams 6767
+      - arr
+
+  rdtclient:
+    image: rogerfar/rdtclient:2.0.25
+    container_name: rdtclient
+    restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN_RDTCLIENT}
+      caddy.reverse_proxy: "{{upstreams 6500}}"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=America/Chicago
+    volumes:
+      - ~/selfhosted/data/rdtclient:/data/db
+      - /mnt/data/usenet:/mnt/data/usenet
+    networks:
+      - cdp # upstreams 6500
+      - arr
 
 networks:
   cdp:
     external: true
+  arr:
+    name: arr
