@@ -111,7 +111,9 @@ services:
       - PUID=1000
       - PGID=1000
       - RPC_SECRET=${ARIA2_RPC_SECRET}
-      - ARIA2RPCPORT=5857
+      - BASIC_AUTH_USERNAME=${ARIA2_USERNAME}
+      - BASIC_AUTH_PASSWORD=${ARIA2_PASSWORD}
+      - ARIA2RPCPORT=8080
     volumes:
       - ~/selfhosted/data/ariang:/aria2/conf
       - /mnt/data/torrents:/aria2/data
@@ -126,8 +128,8 @@ services:
     environment:
       - SONARR__URL=http://sonarr:8989
       - RADARR__URL=http://radarr:7878
-      - SONARR__API=${SONARR_API}
-      - RADARR__API=${RADARR_API}
+      - SONARR__API=${SONARR__API}
+      - RADARR__API=${RADARR__API}
       - DISCORD__TOKEN=${DISCORD_TOKEN}
       - SONARR_SEASON_FOLDERS=true
     networks:
