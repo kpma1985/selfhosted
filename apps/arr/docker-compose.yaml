@@ -130,6 +130,8 @@ services:
       - RADARR__API=${RADARR_API}
       - DISCORD__TOKEN=${DISCORD_TOKEN}
       - SONARR_SEASON_FOLDERS=true
+    networks:
+      - arr
 
 networks:
   cdp:
