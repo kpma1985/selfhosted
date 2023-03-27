@@ -95,10 +95,41 @@ services:
       - TZ=America/Chicago
     volumes:
       - ~/selfhosted/data/rdtclient:/data/db
-      - /mnt/data/usenet:/mnt/data/usenet
+      - /mnt/data/torrents:/mnt/data/torrents
     networks:
       - cdp # upstreams 6500
       - arr
+
+  ariang:
+    image: hurlenko/aria2-ariang
+    container_name: ariang
+    restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN_ARIANG}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - RPC_SECRET=${ARIA2_RPC_SECRET}
+      - ARIA2RPCPORT=5857
+    volumes:
+      - ~/selfhosted/data/ariang:/aria2/conf
+      - /mnt/data/torrents:/aria2/data
+    networks:
+      - cdp # upstreams 8080
+      - arr
+
+  doplarr:
+    image: "ghcr.io/kiranshila/doplarr:v3.6.2"
+    container_name: doplarr
+    restart: unless-stopped
+    environment:
+      - SONARR__URL=http://sonarr:8989
+      - RADARR__URL=http://radarr:7878
+      - SONARR__API=${SONARR_API}
+      - RADARR__API=${RADARR_API}
+      - DISCORD__TOKEN=${DISCORD_TOKEN}
+      - SONARR_SEASON_FOLDERS=true
 
 networks:
   cdp:
