@@ -113,10 +113,12 @@ services:
       - RPC_SECRET=${ARIA2_RPC_SECRET}
       - BASIC_AUTH_USERNAME=${ARIA2_USERNAME}
       - BASIC_AUTH_PASSWORD=${ARIA2_PASSWORD}
-      - ARIA2RPCPORT=8080
+      - ARIA2RPCPORT=443
     volumes:
+      # in the ariang web app, must add the RPC_SECRET
+      # and must set download directory to /mnt/data/torrents
       - ~/selfhosted/data/ariang:/aria2/conf
-      - /mnt/data/torrents:/aria2/data
+      - /mnt/data/torrents:/mnt/data/torrents
     networks:
       - cdp # upstreams 8080
       - arr
