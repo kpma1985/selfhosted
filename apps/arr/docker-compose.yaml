@@ -111,8 +111,6 @@ services:
       - PUID=1000
       - PGID=1000
       - RPC_SECRET=${ARIA2_RPC_SECRET}
-      - BASIC_AUTH_USERNAME=${ARIA2_USERNAME}
-      - BASIC_AUTH_PASSWORD=${ARIA2_PASSWORD}
       - ARIA2RPCPORT=443
     volumes:
       # in the ariang web app, must add the RPC_SECRET
