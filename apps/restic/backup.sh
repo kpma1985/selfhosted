@@ -6,6 +6,7 @@ source .env
 set +o allexport
 
 # backup from local directory to repository as specified in .env
+# for media server, append excludes to command, e.g. `--exclude="jellyfin/transcodes/*.mp4"`
 restic -r b2:${B2_BUCKET_NAME} --verbose backup ${BACKUP_DIR}
 restic_status=$?
 
