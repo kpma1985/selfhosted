@@ -1,0 +1,74 @@
+---
+version: "3"
+
+services:
+  firefly:
+    image: fireflyiii/core:version-6.0.15
+    container_name: firefly
+    restart: unless-stopped
+    labels:
+      caddy: ${DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    env_file:
+      - .env
+    environment:
+      - TRUSTED_PROXIES=**
+      - DB_CONNECTION=mysql
+      - DB_HOST=firefly-db
+      - DB_PORT=3306
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ~/selfhosted/data/firefly/upload:/var/www/html/storage/upload
+    networks:
+      - cdp # upstreams 8080
+      - firefly
+    depends_on:
+      - firefly-db
+
+  firefly-db:
+    image: mariadb:10.6
+    container_name: firefly-db
+    restart: unless-stopped
+    env_file:
+      - .db.env
+    volumes:
+      - ~/selfhosted/data/firefly/db:/var/lib/mysql
+    networks:
+      - firefly
+
+  firefly-cron:
+    image: alpine
+    container_name: firefly-cron
+    command: sh -c "echo \"0 3 * * * wget -qO- http://firefly:8080/api/v1/cron/${STATIC_CRON_TOKEN}\" | crontab - && crond -f -L /dev/stdout"
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - firefly
+    networks:
+      - firefly
+
+  ###
+  # must have a pre-set up Plaid account, see https://github.com/dvankley/firefly-plaid-connector-2#configuration
+  ###
+  firefly-plaid:
+    image: ghcr.io/dvankley/firefly-plaid-connector-2:v1.0.5
+    container_name: firefly-plaid
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SPRING_CONFIG_LOCATION=/opt/fpc-config/application.yml
+      - FIREFLYPLAIDCONNECTOR2_POLLED_CURSORFILEDIRECTORYPATH=/opt/fpc-cursors
+    volumes:
+      - ./application.yml:/opt/fpc-config/application.yml:ro
+      - ~/selfhosted/data/firefly/plaid:/opt/fpc-cursors
+    networks:
+      - firefly
+
+networks:
+  cdp:
+    external: true
+  firefly:

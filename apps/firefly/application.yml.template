@@ -1,0 +1,54 @@
+# from https://github.com/dvankley/firefly-plaid-connector-2/blob/main/src/main/resources/application.yml, with explanations
+fireflyPlaidConnector2:
+  syncMode: polled
+  useNameForDestination: true
+  timeZone: America/Chicago
+  # The maximum number of days apart transactions can be and still be candidates for matching up as a Firefly transfer.
+  # Must be less than fireflyPlaidConnector2.polled.existingFireflyPullWindowDays.
+  transferMatchWindowDays: 3
+  polled:
+    syncFrequencyMinutes: 10
+    existingFireflyPullWindowDays: 5
+    cursorFileDirectoryPath: /opt/fpc-cursors/
+  batch:
+    maxSyncDays: 5
+    setInitialBalance: false
+  firefly:
+    # The URL of your Firefly III instance
+    url: https://firefly.yourdomain.com
+    # Can be created in Firefly in Options->Profile->Oauth->Personal Access Tokens
+    personalAccessToken: TOKAAAAAN
+  plaid:
+    url: https://development.plaid.com
+    clientId: 
+    secret: 
+    batchSize: 100
+    maxRetries: 3
+  categorization:
+    primary:
+      enable: true
+      prefix: "plaid-"
+    detailed:
+      enable: true
+      prefix: "plaid-detailed-"
+  # An array of accounts to sync from Plaid to Firefly
+  accounts:
+    # The account id in Firefly to sync this data to.
+    # For instance, an account you view at https://localhost/accounts/show/1 will be id 1
+    - fireflyAccountId: 1
+    # The access token for the Plaid item that contains the account
+    # You can set up Plaid Items using Plaid Quickstart https://github.com/plaid/quickstart
+    # Note that Items can contain multiple Accounts, so you may re-use this access token in
+    #   other entries in this YAML array
+    plaidItemAccessToken: access-development-insert-uuid-here
+    # The Plaid id for the account you want to sync.
+    # You can retrieve this id from https://plaid.com/docs/api/accounts/#accountsget using an
+    #   Item's access token after you've set it up.
+    plaidAccountId: 
+  product:
+    name: Firefly Plaid Connector 2
+logging:
+  level:
+    root: INFO
+    net:
+      djvk: DEBUG
