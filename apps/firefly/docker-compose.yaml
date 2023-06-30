@@ -50,6 +50,20 @@ services:
     networks:
       - firefly
 
+  firefly-importer:
+    image: fireflyiii/data-importer:version-1.3.1
+    container_name: firefly-importer
+    restart: unless-stopped
+    labels:
+      caddy: https://${IMPORTER_DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    env_file:
+      - .env
+      - .importer.env
+    environment:
+      - FIREFLY_III_URL=http://firefly:8080
+      - VANITY_URL=${DOMAIN}
+
   ###
   # must have a pre-set up Plaid account, see https://github.com/dvankley/firefly-plaid-connector-2#configuration
   ###
