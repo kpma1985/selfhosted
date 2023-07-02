@@ -17,7 +17,7 @@ fireflyPlaidConnector2:
     # The URL of your Firefly III instance
     url: https://firefly.yourdomain.com
     # Can be created in Firefly in Options->Profile->Oauth->Personal Access Tokens
-    personalAccessToken: TOKAAAAAN
+    personalAccessToken: token
   plaid:
     url: https://development.plaid.com
     clientId: 

@@ -3,7 +3,7 @@ version: "3"
 
 services:
   firefly:
-    image: fireflyiii/core:version-6.0.15
+    image: fireflyiii/core:version-6.0.16
     container_name: firefly
     restart: unless-stopped
     labels:
@@ -12,12 +12,6 @@ services:
     env_file:
       - .env
     environment:
-      - TRUSTED_PROXIES=**
-      - DB_CONNECTION=mysql
-      - DB_HOST=firefly-db
-      - DB_PORT=3306
-      - DB_DATABASE=firefly
-      - DB_USERNAME=firefly
       - DB_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - ~/selfhosted/data/firefly/upload:/var/www/html/storage/upload
@@ -27,12 +21,29 @@ services:
     depends_on:
       - firefly-db
 
+  firefly-importer:
+    image: fireflyiii/data-importer:version-1.3.1
+    container_name: firefly-importer
+    restart: unless-stopped
+    labels:
+      caddy: ${IMPORTER_DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+    env_file:
+      - .env
+      - .importer.env
+    environment:
+      - FIREFLY_III_URL=http://firefly:8080
+      - VANITY_URL=https://${DOMAIN}
+    networks:
+      - cdp # upstreams 8080
+      - firefly
+
   firefly-db:
     image: mariadb:10.6
     container_name: firefly-db
     restart: unless-stopped
     env_file:
-      - .db.env
+      - .env
     volumes:
       - ~/selfhosted/data/firefly/db:/var/lib/mysql
     networks:
@@ -49,20 +60,6 @@ services:
       - firefly
     networks:
       - firefly
-
-  firefly-importer:
-    image: fireflyiii/data-importer:version-1.3.1
-    container_name: firefly-importer
-    restart: unless-stopped
-    labels:
-      caddy: https://${IMPORTER_DOMAIN}
-      caddy.reverse_proxy: "{{upstreams 8080}}"
-    env_file:
-      - .env
-      - .importer.env
-    environment:
-      - FIREFLY_III_URL=http://firefly:8080
-      - VANITY_URL=${DOMAIN}
 
   ###
   # must have a pre-set up Plaid account, see https://github.com/dvankley/firefly-plaid-connector-2#configuration
@@ -81,6 +78,32 @@ services:
       - ~/selfhosted/data/firefly/plaid:/opt/fpc-cursors
     networks:
       - firefly
+
+  plaid-quickstart-fe:
+    build:
+      context: ./quickstart
+      dockerfile: ./frontend/Dockerfile
+    container_name: plaid-quickstart-fe
+    restart: unless-stopped
+    labels:
+      caddy: ${PLAID_QS_DOMAIN}
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+    env_file:
+      - .env
+    environment:
+      - REACT_APP_API_HOST=http://plaid-quickstart-be:8000
+    networks:
+      - firefly
+
+  plaid-quickstart-be:
+    build:
+      context: ./quickstart
+      dockerfile: ./node/Dockerfile
+    container_name: plaid-quickstart-be
+    restart: unless-stopped
+    env_file:
+      - .env
+
 
 networks:
   cdp:
