@@ -28,6 +28,7 @@ services:
     labels:
       caddy: ${IMPORTER_DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
+      caddy.import: fa_authentik @fa_trigger
     env_file:
       - .env
       - .importer.env
@@ -88,11 +89,13 @@ services:
     labels:
       caddy: ${PLAID_QS_DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
+      caddy.import: fa_authentik @fa_trigger
     env_file:
       - .env
     environment:
       - REACT_APP_API_HOST=http://plaid-quickstart-be:8000
     networks:
+      - cdp # upstreams 3000
       - firefly
 
   plaid-quickstart-be:
@@ -103,7 +106,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-
+    networks:
+      - firefly
 
 networks:
   cdp:
