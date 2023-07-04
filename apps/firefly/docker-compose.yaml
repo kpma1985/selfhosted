@@ -28,7 +28,7 @@ services:
     labels:
       caddy: ${IMPORTER_DOMAIN}
       caddy.reverse_proxy: "{{upstreams 8080}}"
-      caddy.import: fa_authentik @fa_trigger
+      caddy.import: fa_authentik /*
     env_file:
       - .env
       - .importer.env
@@ -89,7 +89,7 @@ services:
     labels:
       caddy: ${PLAID_QS_DOMAIN}
       caddy.reverse_proxy: "{{upstreams 3000}}"
-      caddy.import: fa_authentik @fa_trigger
+      caddy.import: fa_authentik /*
     env_file:
       - .env
     environment:
